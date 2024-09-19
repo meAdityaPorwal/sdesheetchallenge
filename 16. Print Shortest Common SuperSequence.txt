@@ -1,0 +1,83 @@
+// Print Shortest Common SuperSequence
+
+
+string shortestCommonSupersequence(string str1, string str2) {
+        
+        int m = str1.size();
+        int n = str2.size();
+        
+        if(m == 0 || n == 0)    return "";
+        
+        vector<vector<int>> dp(m+1, vector<int> (n+1));
+        
+        // LCS Code
+        
+        for(int i=0; i<m+1; i++)
+        {
+            for(int j=0; j<n+1; j++)
+            {
+                if(i == 0 || j == 0)
+                {
+                    dp[i][j] = 0;
+                }
+            }
+        }
+        
+        for(int i=1; i<m+1; i++)
+        {
+            for(int j=1; j<n+1; j++)
+            {
+                if(str1[i-1] == str2[j-1])
+                {
+                    dp[i][j] = 1 + dp[i-1][j-1];
+                }
+                else
+                {
+                    dp[i][j] = max(dp[i-1][j], dp[i][j-1]);
+                }
+            }
+        }
+        
+        // Printing LCS code with some changes so it become SCS code
+        
+        int i = m, j = n;
+        string str = "";
+        
+        while(i > 0 && j > 0)
+        {
+            if(str1[i-1] == str2[j-1])
+            {
+                str.push_back(str1[i-1]);
+                i--;
+                j--;
+            }
+            else
+            {
+                if(dp[i-1][j] > dp[i][j-1])
+                {
+                    str.push_back(str1[i-1]); // Adding the  current element in case of SCS
+                    i--;
+                }
+                else
+                {
+                    str.push_back(str2[j-1]); // Adding the  current element in case of SCS
+                    j--;
+                }
+            }
+        }
+        
+        // Added this extra loops for SCS
+        while(i > 0)
+        {
+            str.push_back(str1[i-1]);
+            i--;
+        }
+        while(j > 0)
+        {
+            str.push_back(str2[j-1]);
+            j--;
+        }
+        
+        reverse(str.begin(), str.end());
+        return str;
+    }
